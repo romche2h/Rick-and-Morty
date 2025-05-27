@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "RickAndMorty",
+    "name": "Rick and Morty",
     "slug": "RickAndMorty",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/AppIcon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
