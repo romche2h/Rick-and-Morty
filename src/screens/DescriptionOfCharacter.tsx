@@ -107,8 +107,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.COLOR_GREEN,
     borderRadius: 16,
     color: COLORS.TEXT_COLOR,
-    textAlign: 'center', // Центрирует текст по горизонтали
-    textAlignVertical: 'center', // Центрирует текст по вертикали (только для Android)
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
   testTwo: {
     gap: 12,
