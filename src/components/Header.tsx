@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     paddingTop: 66,
     alignItems: 'center',
   },
-  text: { color: COLORS.TEXT_COLOR, fontSize: 24, fontFamily: 'IBM Plex Sans' },
+  text: { color: COLORS.TEXT_COLOR, fontSize: 24 },
 });
 
 export default Header;

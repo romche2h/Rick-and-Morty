@@ -5,4 +5,5 @@ export const COLORS = {
   COLOR_GREEN: '#198737',
   COLOR_RED: 'red',
   COLOR_GREY: 'grey',
+  COLOR_GREY_FOR_NET_WORK: '#6D7885',
 };

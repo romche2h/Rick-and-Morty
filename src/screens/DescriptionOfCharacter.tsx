@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { COLORS } from '../constants/ui';
@@ -30,7 +30,7 @@ type DescriptionProps = NativeStackScreenProps<
   'Description'
 >;
 
-const DescriptionOfCharacter = ({ route }: DescriptionProps) => {
+const DescriptionOfCharacter = ({ route, navigation }: DescriptionProps) => {
   const { character } = route.params || {};
 
   if (!character) {
@@ -54,9 +54,19 @@ const DescriptionOfCharacter = ({ route }: DescriptionProps) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar style='dark' />
+      <StatusBar style='light' />
+      <View style={styles.header}>
+        <TouchableOpacity>
+          <Text style={styles.hederback} onPress={navigation.goBack}>
+            {'<'}
+          </Text>
+        </TouchableOpacity>
+        <View style={styles.headerViewName}>
+          <Text style={styles.headerName}>{character.name}</Text>
+        </View>
+      </View>
       <View style={styles.contant}>
-        <View style={styles.test}>
+        <View style={styles.contantAvatarAndTitle}>
           <Image style={styles.avatar} source={{ uri: character.image }} />
           <Text
             style={[
@@ -67,7 +77,7 @@ const DescriptionOfCharacter = ({ route }: DescriptionProps) => {
             {character.status}
           </Text>
         </View>
-        <View style={styles.testTwo}>
+        <View style={styles.title}>
           <Text style={styles.species}>Species: {character.species}</Text>
           <Text style={styles.gender}>Gender: {character.gender}</Text>
           <Text style={styles.episode}>Episodes: {character.id}</Text>
@@ -86,6 +96,24 @@ const styles = StyleSheet.create({
     flex: 1,
     color: COLORS.TEXT_COLOR,
     padding: 30,
+    paddingTop: 60,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  hederback: {
+    color: COLORS.TEXT_COLOR,
+    fontSize: 30,
+  },
+  headerViewName: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  headerName: {
+    color: COLORS.TEXT_COLOR,
+    fontSize: 24,
   },
   contant: {
     backgroundColor: COLORS.SECONDARY_BACKGROUND,
@@ -95,7 +123,7 @@ const styles = StyleSheet.create({
     gap: 12,
     justifyContent: 'center',
   },
-  test: {
+  contantAvatarAndTitle: {
     alignItems: 'center',
     gap: 12,
     marginBottom: 24,
@@ -110,7 +138,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
-  testTwo: {
+  title: {
     gap: 12,
     marginLeft: 16,
   },
