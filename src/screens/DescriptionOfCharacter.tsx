@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { Svg, Path } from 'react-native-svg';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { COLORS } from '../constants/ui';
 
@@ -56,10 +57,20 @@ const DescriptionOfCharacter = ({ route, navigation }: DescriptionProps) => {
     <View style={styles.container}>
       <StatusBar style='light' />
       <View style={styles.header}>
-        <TouchableOpacity>
-          <Text style={styles.hederback} onPress={navigation.goBack}>
-            {'<'}
-          </Text>
+        <TouchableOpacity onPress={navigation.goBack}>
+          <Svg style={styles.hederback} viewBox='0 0 24 24'>
+            <Path
+              d='M14.29 2.32L14.29 2.29C14.68 1.89 15.31 1.89 15.7 2.29C16.1 2.68 16.1 3.31 15.7 3.7L15.67 3.7L14.29 2.32ZM15.67 20.29L15.7 20.29C16.1 20.68 16.1 21.31 15.7 21.7C15.31 22.1 14.68 22.1 14.29 21.7L14.29 21.67L15.67 20.29Z'
+              fill='#F4F4F4'
+            />
+            <Path
+              d='M15 3L6 12L15 21'
+              stroke='#F4F4F4'
+              strokeWidth={2}
+              strokeLinejoin='round'
+              strokeLinecap='round'
+            />
+          </Svg>
         </TouchableOpacity>
         <View style={styles.headerViewName}>
           <Text style={styles.headerName}>{character.name}</Text>
@@ -105,7 +116,8 @@ const styles = StyleSheet.create({
   },
   hederback: {
     color: COLORS.TEXT_COLOR,
-    fontSize: 30,
+    height: 24,
+    width: 24,
   },
   headerViewName: {
     flex: 1,
