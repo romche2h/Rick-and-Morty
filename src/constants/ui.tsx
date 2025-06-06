@@ -6,4 +6,5 @@ export const COLORS = {
   COLOR_RED: 'red',
   COLOR_GREY: 'grey',
   COLOR_GREY_FOR_NET_WORK: '#6D7885',
+  COLOR_BORDER_RADIUS: '#1E1E20',
 };

@@ -92,6 +92,7 @@ const DescriptionOfCharacter = ({ route, navigation }: DescriptionProps) => {
           <Text style={styles.species}>Species: {character.species}</Text>
           <Text style={styles.gender}>Gender: {character.gender}</Text>
           <Text style={styles.episode}>Episodes: {character.id}</Text>
+
           <Text style={styles.location}>
             Last known location: {character.origin.name}
           </Text>

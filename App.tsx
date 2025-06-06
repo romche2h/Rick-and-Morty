@@ -8,6 +8,7 @@ import NetworkStatus from './src/screens/NetworkStatus';
 import NetInfo from '@react-native-community/netinfo';
 import { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 type RootStackParamList = {
   MainPage: undefined;
@@ -59,20 +60,22 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <StatusBar style='light' />
-      <Stack.Navigator>
-        <Stack.Screen
-          name='MainPage'
-          component={MainPage}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='Description'
-          component={DescriptionOfCharacter}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView>
+      <NavigationContainer>
+        <StatusBar style='light' />
+        <Stack.Navigator>
+          <Stack.Screen
+            name='MainPage'
+            component={MainPage}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='Description'
+            component={DescriptionOfCharacter}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
