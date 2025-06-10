@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
+
 type ErrorComponentProps = {
   message: string;
 };

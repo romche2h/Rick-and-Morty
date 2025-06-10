@@ -4,9 +4,9 @@ import {
   Text,
   View,
   Image,
-  ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import axios from 'axios';
 import Header from '../components/Header';
@@ -46,24 +46,37 @@ export default function MainPage({ navigation }: MainPageProps) {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [serchText, setSearchText] = useState<string>('');
+  const [searchText, setSearchText] = useState<string>('');
+  const [filters, setFilters] = useState<{ status: string; gender: string }>({
+    status: '',
+    gender: '',
+  });
 
-  const fetchData = async (numberPage = 1, serchQuery = '') => {
-    if (loading || (!hasMore && serchQuery)) return;
+  const fetchData = async (
+    pageNumber = 1,
+    searchQuery = '',
+    appliedFilters = { status: '', gender: '' },
+    append = false
+  ) => {
+    if (loading || (!hasMore && append)) return;
+
     setLoading(true);
     try {
       const response = await axios.get<{
         results: Character[];
-        info: { next: string };
+        info: { next: string | null };
       }>(
-        `https://rickandmortyapi.com/api/character?page=${numberPage}&name=${serchQuery}`
+        `https://rickandmortyapi.com/api/character?page=${pageNumber}&name=${searchQuery}&status=${appliedFilters.status}&gender=${appliedFilters.gender}`
       );
+
       const data = response.data;
-      if (numberPage === 1) {
-        setCharacters(data.results);
-      } else {
+
+      if (append) {
         setCharacters((prev) => [...prev, ...data.results]);
+      } else {
+        setCharacters(data.results);
       }
+
       setHasMore(data.info.next !== null);
       setPage((prev) => prev + 1);
       setError('');
@@ -86,8 +99,8 @@ export default function MainPage({ navigation }: MainPageProps) {
   useEffect(() => {
     setPage(1);
     setHasMore(true);
-    fetchData(1, serchText);
-  }, [serchText]);
+    fetchData(1, searchText, filters, false);
+  }, [searchText, filters]);
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -100,55 +113,68 @@ export default function MainPage({ navigation }: MainPageProps) {
     }
   };
 
+  const filtersApplied = filters.status !== '' || filters.gender !== '';
+  const isFiltered = searchText !== '' || filtersApplied;
+
   return (
     <View style={styles.container}>
       <Header title='Rick & Morty Characters' style={styles.header} />
-      <InputTextAndFilter value={serchText} onChangeText={setSearchText} />
-      {error && <ErrorComponent message={error} />}
-      <ScrollView
-        onMomentumScrollEnd={() => {
-          if (!serchText) {
-            fetchData(page);
-          }
+      <InputTextAndFilter
+        value={searchText}
+        onChangeText={setSearchText}
+        style={styles.inputAndFilterStyle}
+        onApplyFilters={(newFilters) => {
+          setFilters(newFilters);
         }}
-      >
-        {characters.map((char, index) => (
+      />
+      {error && <ErrorComponent message={error} />}
+      <FlatList
+        data={characters}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
           <TouchableOpacity
-            key={`${char.id}-${index}`}
             onPress={() =>
-              navigation.navigate('Description', { character: char })
+              navigation.navigate('Description', { character: item })
             }
           >
             <View style={styles.content}>
               <View style={styles.row}>
-                <Image source={{ uri: char.image }} style={styles.avatar} />
+                <Image source={{ uri: item.image }} style={styles.avatar} />
                 <View>
-                  <Text style={styles.text}>{char.name}</Text>
+                  <Text style={styles.text}>{item.name}</Text>
                   <View style={styles.statusAndSpecies}>
                     <Text
                       style={[
                         styles.textSmall,
-                        { color: getStatusColor(char.status) },
+                        { color: getStatusColor(item.status) },
                       ]}
                     >
-                      {char.status}
+                      {item.status}
                     </Text>
-                    <Text style={styles.textSmall}>{char.species}</Text>
+                    <Text style={styles.textSmall}>{item.species}</Text>
                   </View>
-                  <Text style={styles.textSmall}>{char.gender}</Text>
+                  <Text style={styles.textSmall}>{item.gender}</Text>
                 </View>
               </View>
             </View>
           </TouchableOpacity>
-        ))}
-        {loading && (
-          <ActivityIndicator
-            style={styles.indicatorLoading}
-            size='small'
-            color={COLORS.COLOR_GREEN}
-          />
         )}
-      </ScrollView>
+        onEndReached={() => {
+          if (!isFiltered) {
+            fetchData(page, '', { status: '', gender: '' }, true);
+          }
+        }}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          loading ? (
+            <ActivityIndicator
+              style={styles.indicatorLoading}
+              size='small'
+              color={COLORS.COLOR_GREEN}
+            />
+          ) : null
+        }
+      />
     </View>
   );
 }
@@ -159,21 +185,22 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.PRIMARY_BACKGROUND,
     padding: 20,
   },
-  inputText: {},
-
-  row: { flexDirection: 'row', gap: 16, padding: 15 },
-  test: {
-    gap: 6,
+  inputAndFilterStyle: {},
+  row: {
+    flexDirection: 'row',
+    gap: 16,
+    padding: 15,
   },
   header: { marginBottom: 24 },
   statusAndSpecies: { flexDirection: 'row', gap: 5 },
   content: {
-    width: 368,
+    width: '100%',
     height: 100,
     borderRadius: 24,
     backgroundColor: COLORS.SECONDARY_BACKGROUND,
-    gap: 6,
-    marginTop: 4,
+    marginTop: 8,
+    padding: 8,
+    justifyContent: 'center',
   },
   avatar: {
     width: 86,
