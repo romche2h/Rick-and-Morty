@@ -17,6 +17,6 @@ export function ErrorComponent({ message }: ErrorComponentProps) {
 }
 
 const styles = StyleSheet.create({
-  picture: { alignSelf: 'center', width: 395, height: 274 },
+  picture: { alignSelf: 'center', width: '100%', height: '50%' },
   textMessage: { textAlign: 'center', fontSize: 20, marginBottom: 40 },
 });

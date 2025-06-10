@@ -199,7 +199,6 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     backgroundColor: COLORS.SECONDARY_BACKGROUND,
     marginTop: 8,
-    padding: 8,
     justifyContent: 'center',
   },
   avatar: {
@@ -209,11 +208,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: COLORS.TEXT_COLOR,
-    fontSize: 18,
+    fontSize: 15,
   },
   textSmall: {
     color: COLORS.TEXT_COLOR,
-    fontSize: 12,
+    fontSize: 11,
   },
   indicatorLoading: { marginVertical: 20, alignSelf: 'center' },
 });

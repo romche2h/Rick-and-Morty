@@ -5,9 +5,11 @@ import {
   Text,
   Image,
   ViewStyle,
+  SafeAreaView,
+  Modal,
+  TextInput,
 } from 'react-native';
 import { Path, Svg, Circle, G } from 'react-native-svg';
-import { TextInput } from 'react-native-gesture-handler';
 import { COLORS } from '../constants/ui';
 import { useState } from 'react';
 
@@ -43,7 +45,6 @@ function InputTextAndFilter({
             <Path d='M7.62 11L5 13.62' />
           </G>
         </Svg>
-
         <TextInput
           style={styles.inputText}
           placeholder='Search'
@@ -52,7 +53,7 @@ function InputTextAndFilter({
           onChangeText={onChangeText}
         />
       </View>
-      <TouchableOpacity onPress={() => setShowFilters((prev) => !prev)}>
+      <TouchableOpacity onPress={() => setShowFilters(true)}>
         <Svg style={styles.filter} viewBox='0 0 16.0959 14.096'>
           <Circle
             cx='4.714966'
@@ -94,8 +95,14 @@ function InputTextAndFilter({
           />
         </Svg>
       </TouchableOpacity>
-      {showFilters && (
-        <View style={styles.wrapper}>
+
+      <Modal
+        visible={showFilters}
+        animationType='slide'
+        transparent
+        onRequestClose={() => setShowFilters(false)}
+      >
+        <SafeAreaView style={styles.modalContainer}>
           <View style={styles.containerTwo}>
             <View style={styles.header}>
               <TouchableOpacity onPress={() => setShowFilters(false)}>
@@ -117,125 +124,71 @@ function InputTextAndFilter({
             <View style={styles.margBot}>
               <Text style={styles.status}>Status</Text>
               <View style={styles.statusContent}>
-                <TouchableOpacity onPress={() => setSelectStatus('Dead')}>
-                  <Text
-                    style={[
-                      styles.statusLives,
-                      selectStatus === 'Dead' && {
-                        backgroundColor: COLORS.TEXT_COLOR,
-                        color: COLORS.COLOR_BLACK,
-                      },
-                    ]}
+                {['Dead', 'Alive', 'Unknown'].map((status) => (
+                  <TouchableOpacity
+                    key={status}
+                    onPress={() => setSelectStatus(status)}
                   >
-                    Dead
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setSelectStatus('Alive')}>
-                  <Text
-                    style={[
-                      styles.statusLives,
-                      selectStatus === 'Alive' && {
-                        backgroundColor: COLORS.TEXT_COLOR,
-                        color: COLORS.COLOR_BLACK,
-                      },
-                    ]}
-                  >
-                    Alive
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setSelectStatus('Unknown')}>
-                  <Text
-                    style={[
-                      styles.statusLives,
-                      selectStatus === 'Unknown' && {
-                        backgroundColor: COLORS.TEXT_COLOR,
-                        color: COLORS.COLOR_BLACK,
-                      },
-                    ]}
-                  >
-                    Unknown
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={[
+                        styles.statusLives,
+                        selectStatus === status && {
+                          backgroundColor: COLORS.TEXT_COLOR,
+                          color: COLORS.COLOR_BLACK,
+                        },
+                      ]}
+                    >
+                      {status}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
               </View>
             </View>
             <View style={styles.margBot}>
               <Text style={styles.status}>Gender</Text>
               <View style={styles.statusContent}>
-                <TouchableOpacity onPress={() => setSelectGender('Female')}>
-                  <Text
-                    style={[
-                      styles.statusLives,
-                      selectGender === 'Female' && {
-                        backgroundColor: COLORS.TEXT_COLOR,
-                        color: COLORS.COLOR_BLACK,
-                      },
-                    ]}
+                {['Female', 'Male', 'Genderless', 'Unknown'].map((gender) => (
+                  <TouchableOpacity
+                    key={gender}
+                    onPress={() => setSelectGender(gender)}
                   >
-                    Female
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setSelectGender('Male')}>
-                  <Text
-                    style={[
-                      styles.statusLives,
-                      selectGender === 'Male' && {
-                        backgroundColor: COLORS.TEXT_COLOR,
-                        color: COLORS.COLOR_BLACK,
-                      },
-                    ]}
-                  >
-                    Male
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setSelectGender('Genderless')}>
-                  <Text
-                    style={[
-                      styles.statusLives,
-                      selectGender === 'Genderless' && {
-                        backgroundColor: COLORS.TEXT_COLOR,
-                        color: COLORS.COLOR_BLACK,
-                      },
-                    ]}
-                  >
-                    Genderless
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => setSelectGender('Unknown')}>
-                  <Text
-                    style={[
-                      styles.statusLives,
-                      selectGender === 'Unknown' && {
-                        backgroundColor: COLORS.TEXT_COLOR,
-                        color: COLORS.COLOR_BLACK,
-                      },
-                    ]}
-                  >
-                    Unknown
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={[
+                        styles.statusLives,
+                        selectGender === gender && {
+                          backgroundColor: COLORS.TEXT_COLOR,
+                          color: COLORS.COLOR_BLACK,
+                        },
+                      ]}
+                    >
+                      {gender}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
               </View>
             </View>
-            <View style={styles.containerBottom}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (onApplyFilters) {
-                    onApplyFilters({
-                      status: selectStatus,
-                      gender: selectGender,
-                    });
-                    setShowFilters(false);
-                  }
-                }}
-              >
-                <Text style={styles.bottomApply}>Apply</Text>
-              </TouchableOpacity>
-            </View>
+
+            <TouchableOpacity
+              style={styles.containerBottom}
+              onPress={() => {
+                if (onApplyFilters) {
+                  onApplyFilters({
+                    status: selectStatus,
+                    gender: selectGender,
+                  });
+                  setShowFilters(false);
+                }
+              }}
+            >
+              <Text style={styles.bottomApply}>Apply</Text>
+            </TouchableOpacity>
           </View>
-        </View>
-      )}
+        </SafeAreaView>
+      </Modal>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -248,7 +201,6 @@ const styles = StyleSheet.create({
   svgAndInput: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignContent: 'center',
     paddingLeft: 13,
     borderRadius: 16,
     borderWidth: 2,
@@ -261,6 +213,7 @@ const styles = StyleSheet.create({
     marginRight: 2.2,
   },
   inputText: {
+    height: 40,
     flex: 1,
     color: COLORS.TEXT_COLOR,
   },
@@ -268,24 +221,14 @@ const styles = StyleSheet.create({
     width: 14,
     height: 12,
   },
-  root: { flex: 1, justifyContent: 'flex-end' },
-  picture: { alignSelf: 'center', width: 395, height: 274 },
-  textMessage: { textAlign: 'center', fontSize: 20, marginBottom: 40 },
-  test: { color: COLORS.TEXT_COLOR },
-  wrapper: {
-    position: 'absolute',
-    bottom: -738,
-    left: 0,
-    right: 0,
-    justifyContent: 'flex-end',
+  modalContainer: {
     flex: 1,
+    justifyContent: 'flex-end',
   },
   containerTwo: {
-    width: 410,
-    height: 365,
+    width: '100%',
     backgroundColor: COLORS.SECONDARY_BACKGROUND,
     borderRadius: 32,
-    alignSelf: 'center',
     padding: 24,
   },
   header: {
@@ -300,8 +243,8 @@ const styles = StyleSheet.create({
   status: {
     color: COLORS.TEXT_COLOR,
     fontSize: 14,
-    marginBottom: 18,
-    fontWeight: 500,
+    marginBottom: 13,
+    fontWeight: '500',
   },
   statusLives: {
     color: COLORS.TEXT_COLOR,
@@ -311,12 +254,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderColor: COLORS.COLOR_BORDER_RADIUS,
     borderRadius: 24,
-    fontSize: 12,
+    fontSize: 10,
   },
   statusContent: { flexDirection: 'row', gap: 10 },
   margBot: { marginBottom: 34 },
   containerBottom: {
-    width: 354,
+    width: '100%',
     height: 42,
     backgroundColor: COLORS.COLOR_MENTHOL,
     borderRadius: 16,

@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
     flex: 1,
     color: COLORS.TEXT_COLOR,
     padding: 30,
-    paddingTop: 60,
+    paddingTop: 80,
+    alignItems: 'center',
   },
   header: {
     flexDirection: 'row',
@@ -150,6 +151,7 @@ const styles = StyleSheet.create({
     color: COLORS.TEXT_COLOR,
     textAlign: 'center',
     textAlignVertical: 'center',
+    lineHeight: 42,
   },
   title: {
     gap: 12,
