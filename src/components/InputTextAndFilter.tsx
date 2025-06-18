@@ -11,13 +11,15 @@ import {
 } from 'react-native';
 import { Path, Svg, Circle, G } from 'react-native-svg';
 import { COLORS } from '../constants/ui';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type Props = {
   value: string;
   onChangeText: (text: string) => void;
   style?: ViewStyle;
   onApplyFilters?: (filters: { status: string; gender: string }) => void;
+  resetFiltersFlag?: boolean;
+  onResetHandled?: () => void;
 };
 
 function InputTextAndFilter({
@@ -25,10 +27,25 @@ function InputTextAndFilter({
   onChangeText,
   onApplyFilters,
   style,
+  resetFiltersFlag,
+  onResetHandled,
 }: Props) {
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [selectStatus, setSelectStatus] = useState<string>('');
   const [selectGender, setSelectGender] = useState<string>('');
+
+  useEffect(() => {
+    if (resetFiltersFlag) {
+      setSelectStatus('');
+      setSelectGender('');
+      if (onApplyFilters) {
+        onApplyFilters({ status: '', gender: '' });
+      }
+      if (onResetHandled) {
+        onResetHandled();
+      }
+    }
+  }, [resetFiltersFlag]);
 
   return (
     <View style={[styles.container, style]}>
@@ -176,8 +193,8 @@ function InputTextAndFilter({
                     status: selectStatus,
                     gender: selectGender,
                   });
-                  setShowFilters(false);
                 }
+                setShowFilters(false);
               }}
             >
               <Text style={styles.bottomApply}>Apply</Text>
@@ -192,10 +209,10 @@ function InputTextAndFilter({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    gap: 17,
+    gap: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 24,
+    marginBottom: 5,
     zIndex: 100,
   },
   svgAndInput: {

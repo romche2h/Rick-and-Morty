@@ -14,6 +14,7 @@ import { COLORS } from '../constants/ui';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import InputTextAndFilter from '../components/InputTextAndFilter';
 import { ErrorComponent } from '../components/ErrorComponent';
+import ActiveFilters from '../components/ActiveFilters';
 
 type RootStackParamList = {
   MainPage: undefined;
@@ -51,6 +52,7 @@ export default function MainPage({ navigation }: MainPageProps) {
     status: '',
     gender: '',
   });
+  const [resetFiltersFlag, setResetFiltersFlag] = useState<boolean>(false);
 
   const fetchData = async (
     pageNumber = 1,
@@ -125,6 +127,15 @@ export default function MainPage({ navigation }: MainPageProps) {
         style={styles.inputAndFilterStyle}
         onApplyFilters={(newFilters) => {
           setFilters(newFilters);
+        }}
+        resetFiltersFlag={resetFiltersFlag}
+        onResetHandled={() => setResetFiltersFlag(false)}
+      />
+      <ActiveFilters
+        filters={filters}
+        onResetFilters={() => {
+          setFilters({ status: '', gender: '' });
+          setResetFiltersFlag(true);
         }}
       />
       {error && <ErrorComponent message={error} />}
