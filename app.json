@@ -4,11 +4,11 @@
     "slug": "RickAndMorty",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/AppIcon.png",
+    "icon": "assets/AppIcon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {
-      "image": "./assets/SplashScreen.png",
+      "image": "assets/SplashScreen.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,7 +22,8 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.rickandmorty.app",
-      "versionCode": 1
+      "versionCode": 1,
+      "permissions": ["INTERNET"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
