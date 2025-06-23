@@ -143,7 +143,7 @@ function InputTextAndFilter({
               <View style={styles.statusContent}>
                 {['Dead', 'Alive', 'Unknown'].map((status) => (
                   <TouchableOpacity
-                    key={status}
+                    key={`status-${status}`}
                     onPress={() => setSelectStatus(status)}
                   >
                     <Text
@@ -166,7 +166,7 @@ function InputTextAndFilter({
               <View style={styles.statusContent}>
                 {['Female', 'Male', 'Genderless', 'Unknown'].map((gender) => (
                   <TouchableOpacity
-                    key={gender}
+                    key={`gender-${gender}`}
                     onPress={() => setSelectGender(gender)}
                   >
                     <Text

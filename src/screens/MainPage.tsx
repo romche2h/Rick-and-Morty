@@ -28,14 +28,8 @@ type Character = {
   species: string;
   gender: string;
   image: string;
-  location: {
-    name: string;
-    url: string;
-  };
-  origin: {
-    name: string;
-    url: string;
-  };
+  location: { name: string; url: string };
+  origin: { name: string; url: string };
   episode: [];
 };
 
@@ -72,11 +66,17 @@ export default function MainPage({ navigation }: MainPageProps) {
       );
 
       const data = response.data;
+      const newData = data.results;
 
       if (append) {
-        setCharacters((prev) => [...prev, ...data.results]);
+        setCharacters((prev) =>
+          [...prev, ...newData].filter(
+            (item, index, self) =>
+              index === self.findIndex((t) => t.id === item.id)
+          )
+        );
       } else {
-        setCharacters(data.results);
+        setCharacters(newData);
       }
 
       setHasMore(data.info.next !== null);
