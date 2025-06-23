@@ -1,8 +1,17 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Svg, Path } from 'react-native-svg';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { COLORS } from '../constants/ui';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 type RootStackParamList = {
   MainPage: undefined;
@@ -24,6 +33,7 @@ type Character = {
     name: string;
     url: string;
   };
+  episode: string[];
 };
 
 type DescriptionProps = NativeStackScreenProps<
@@ -32,7 +42,32 @@ type DescriptionProps = NativeStackScreenProps<
 >;
 
 const DescriptionOfCharacter = ({ route, navigation }: DescriptionProps) => {
+  const [nameEpisode, setNameEpisode] = useState<string[]>([]);
   const { character } = route.params || {};
+
+  useEffect(() => {
+    const fetchEpisode = async () => {
+      try {
+        const episodeIds = character.episode.map((episode) =>
+          episode.split('/').pop()
+        );
+        if (episodeIds.length === 0) return;
+        const url = `https://rickandmortyapi.com/api/episode/${episodeIds.join(
+          ','
+        )}`;
+        const responce = await axios.get(url);
+        const data = responce.data;
+        const names = Array.isArray(data)
+          ? data.map((ep) => ep.name)
+          : [data.name];
+
+        setNameEpisode(names);
+      } catch (error) {
+        console.error('Ошибка загрузки эпизодов:', error);
+      }
+    };
+    fetchEpisode();
+  }, [character]);
 
   if (!character) {
     return (
@@ -76,28 +111,38 @@ const DescriptionOfCharacter = ({ route, navigation }: DescriptionProps) => {
           <Text style={styles.headerName}>{character.name}</Text>
         </View>
       </View>
-      <View style={styles.contant}>
-        <View style={styles.contantAvatarAndTitle}>
-          <Image style={styles.avatar} source={{ uri: character.image }} />
-          <Text
-            style={[
-              styles.status,
-              { backgroundColor: getStatusColor(character.status) },
-            ]}
-          >
-            {character.status}
-          </Text>
-        </View>
-        <View style={styles.title}>
-          <Text style={styles.species}>Species: {character.species}</Text>
-          <Text style={styles.gender}>Gender: {character.gender}</Text>
-          <Text style={styles.episode}>Episodes: {character.id}</Text>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ alignItems: 'center' }}
+      >
+        <View style={styles.contant}>
+          <View style={styles.contantAvatarAndTitle}>
+            <Image style={styles.avatar} source={{ uri: character.image }} />
+            <Text
+              style={[
+                styles.status,
+                { backgroundColor: getStatusColor(character.status) },
+              ]}
+            >
+              {character.status}
+            </Text>
+          </View>
+          <View style={styles.title}>
+            <Text style={styles.species}>Species: {character.species}</Text>
+            <Text style={styles.gender}>Gender: {character.gender}</Text>
+            <Text style={styles.episode}>Episodes:</Text>
+            {nameEpisode.map((name, index) => (
+              <Text key={index} style={styles.episode}>
+                • {name}
+              </Text>
+            ))}
 
-          <Text style={styles.location}>
-            Last known location: {character.origin.name}
-          </Text>
+            <Text style={styles.location}>
+              Last known location: {character.origin.name}
+            </Text>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -107,7 +152,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.PRIMARY_BACKGROUND,
     flex: 1,
     color: COLORS.TEXT_COLOR,
-    padding: 30,
     paddingTop: 80,
     alignItems: 'center',
   },
@@ -119,7 +163,7 @@ const styles = StyleSheet.create({
   hederback: {
     color: COLORS.TEXT_COLOR,
     height: 24,
-    width: 24,
+    width: 50,
   },
   headerViewName: {
     flex: 1,
@@ -131,11 +175,11 @@ const styles = StyleSheet.create({
   },
   contant: {
     backgroundColor: COLORS.SECONDARY_BACKGROUND,
-    width: 355,
-    height: 570,
+    padding: 16,
+    maxWidth: 345,
+    minHeight: 570,
     borderRadius: 24,
     gap: 12,
-    justifyContent: 'center',
   },
   contantAvatarAndTitle: {
     alignItems: 'center',

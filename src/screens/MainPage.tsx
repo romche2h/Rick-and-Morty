@@ -30,7 +30,7 @@ type Character = {
   image: string;
   location: { name: string; url: string };
   origin: { name: string; url: string };
-  episode: [];
+  episode: string[];
 };
 
 type MainPageProps = NativeStackScreenProps<RootStackParamList, 'MainPage'>;
